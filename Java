@@ -1,12 +1,8 @@
-package com.example.kalkulator_napiwkw;
+package com.example.generatorcytatow;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,57 +10,49 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
+import java.util.ArrayList;
+import java.util.Random;
 
-    @Override
+public class MainActivity extends AppCompatActivity {
+    private ArrayList<Cytat> listaCytatow = new ArrayList<>();
+    private Random randomGenerator = new Random();
+@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        przygotujDaneCytatow();
+        if(!listaCytatow.isEmpty()){
+            Button guzik = findViewById(R.id.guzik);
+
+            guzik.setOnClickListener(v -> {
+                int losowyIndeks = randomGenerator.nextInt(listaCytatow.size());
+                Cytat losowyCytat = listaCytatow.get(losowyIndeks);
+
+                TextView cytat = findViewById(R.id.cytat);
+                TextView autor = findViewById(R.id.autor);
+
+                cytat.setText(losowyCytat.tresc);
+                autor.setText(losowyCytat.autor);
+            });
+        }
+
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
-
         });
-        Button przycisk = findViewById(R.id.przycisk);
-        RadioGroup napiwki = findViewById(R.id.napiwkiRadio);
-        EditText poleKwota = findViewById(R.id.poleKwota);
-        EditText poleNapiwek = findViewById(R.id.poleNapiwek);
-        TextView wynikNapiwek = findViewById(R.id.wynikNapiwek);
-        TextView wynikSuma = findViewById(R.id.sumaNapiwek);
+    }
 
-        przycisk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String kwotaText = poleKwota.getText().toString();
-                String napiwekText = poleNapiwek.getText().toString();
+    private void przygotujDaneCytatow() {
 
-                if (kwotaText.isEmpty()) {
-                    Toast.makeText(MainActivity.this, "Wprowadź kwotę rachunku", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                double kwota = Double.parseDouble(kwotaText);
-                double procent;
-                if(!napiwekText.isEmpty()){
-                procent = Double.parseDouble(napiwekText);
-                } else {
-                int napiwekRadio = napiwki.getCheckedRadioButtonId();
-                if(napiwekRadio == R.id.napiwek15){
-                    procent = 15;
-                } else if(napiwekRadio == R.id.napiwek25){
-                    procent = 25;
-                } else{
-                    procent = 20;
-                }
-                }
-                double napiwek = kwota * (procent / 100.0);
-                double suma = kwota + napiwek;
-
-                wynikNapiwek.setText("Napiwek: "+napiwek);
-                wynikSuma.setText("Do zapłaty: "+suma);
-
-            }
-            });
+        listaCytatow.add(new Cytat("Być albo nie być, oto jest pytanie.", "William Szekspir"));
+        listaCytatow.add(new Cytat("Wiem, że nic nie wiem.", "Sokrates"));
+        listaCytatow.add(new Cytat("Myślę, więc jestem.", "Kartezjusz"));
+        listaCytatow.add(new Cytat("Człowiek, który boi się cierpieć, już cierpi przez sam strach.", "Michel de Montaigne"));
+        listaCytatow.add(new Cytat("Podróż tysiąca mil zaczyna się od jednego kroku.", "Laozi"));
+        listaCytatow.add(new Cytat("„To, czego szukasz, także szuka ciebie.", "Rumi"));
     }
 }
