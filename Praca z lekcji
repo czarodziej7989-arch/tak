@@ -1,0 +1,39 @@
+import java.util.Scanner;
+public class Main {
+    public static void metoda(){
+        System.out.println("1. Celsjusz -> Farenheit");
+        System.out.println("2. Farenheit -> Celsjusz");
+        System.out.println("3. Celsjusz -> kelvin");
+    }
+    public static double cToF(double t){
+        return (t * 9/5) + 32;
+    }
+    public static double fToC(double t){
+        return (t - 32)* 9/5;
+    }
+    public static double cToK(double t){
+        return (t + 273.15);
+    }
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        metoda();
+        int wybor = sc.nextInt();
+        System.out.println("Podaj Temperature");
+        double t = sc.nextDouble();
+        double wynik;
+        switch(wybor){
+            case 1:
+                wynik = Temperatura.cToF(t);
+                System.out.println(wynik+" F.");
+                break;
+            case 2:
+                wynik = Temperatura.fToC(t);
+                System.out.println(wynik+" C");
+                break;
+            case 3:
+                wynik = Temperatura.cToK(t);
+                System.out.println(wynik+" K");
+                break;
+        }
+    }
+}
