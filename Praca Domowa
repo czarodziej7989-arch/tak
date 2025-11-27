@@ -1,0 +1,6 @@
+1.
+W bloku try wykonuje się kod w środku znajduję się catch który jest wykorzystywany na wyjątki można mieć dużo catchow. finally który się wykonuje po wszystkich try i catch.
+2.
+Dziedziczenie pozwala klasie potomnej przejąć pola i metody klasy bazowej przez co nie potrzeba już powtarzać kodu np. przez używanie poliformizmu czy override.
+3.
+Array ma rozmiar tablicy przypisany po stworzeniu a ArrayList pozwala na zmiane rozmiaru tablicy jak ich elementów 
