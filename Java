@@ -1,58 +1,119 @@
-package com.example.generatorcytatow;
+package com.example.myapplication;
 
 import android.os.Bundle;
-import android.widget.Button;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.*;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.myapplication.Wydatek;
 
 import java.util.ArrayList;
-import java.util.Random;
 
-public class MainActivity extends AppCompatActivity {
-    private ArrayList<Cytat> listaCytatow = new ArrayList<>();
-    private Random randomGenerator = new Random();
-@Override
+public class MainActivity extends AppCompatActivity
+        implements View.OnClickListener, WydatekAdapter.OnWydatekActionListener {
+
+    private final ArrayList<Wydatek> listaWydatkow = new ArrayList<>();
+
+    private EditText poleNazwaWydatku;
+    private EditText poleKwotaWydatku;
+    private Spinner spinnerKategoria;
+    private Button przyciskZapisz;
+
+    private WydatekAdapter adapter;
+    private TextView tekstPodsumowanie;
+    private TextView tekstPustaLista;
+    private RecyclerView listaRecyclerView;
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        przygotujDaneCytatow();
-        if(!listaCytatow.isEmpty()){
-            Button guzik = findViewById(R.id.guzik);
+        poleNazwaWydatku = findViewById(R.id.poleNazwaWydatku);
+        poleKwotaWydatku = findViewById(R.id.poleKwotaWydatku);
+        spinnerKategoria = findViewById(R.id.spinnerKategoria);
+        przyciskZapisz = findViewById(R.id.przyciskZapisz);
 
-            guzik.setOnClickListener(v -> {
-                int losowyIndeks = randomGenerator.nextInt(listaCytatow.size());
-                Cytat losowyCytat = listaCytatow.get(losowyIndeks);
+        tekstPodsumowanie = findViewById(R.id.tekstPodsumowanie);
+        tekstPustaLista = findViewById(R.id.tekstPustaLista);
+        listaRecyclerView = findViewById(R.id.listaWydatkow);
 
-                TextView cytat = findViewById(R.id.cytat);
-                TextView autor = findViewById(R.id.autor);
+        adapter = new WydatekAdapter(listaWydatkow, this);
+        listaRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        listaRecyclerView.setAdapter(adapter);
 
-                cytat.setText(losowyCytat.tresc);
-                autor.setText(losowyCytat.autor);
-            });
-        }
+        przyciskZapisz.setOnClickListener(this);
 
-
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        odswiezPodsumowanie();
     }
 
-    private void przygotujDaneCytatow() {
+    @Override
+    public void onClick(View view) {
+        String nazwa = poleNazwaWydatku.getText().toString().trim();
+        String kwotaTekst = poleKwotaWydatku.getText().toString().trim();
+        String kategoria = spinnerKategoria.getSelectedItem().toString();
 
-        listaCytatow.add(new Cytat("Być albo nie być, oto jest pytanie.", "William Szekspir"));
-        listaCytatow.add(new Cytat("Wiem, że nic nie wiem.", "Sokrates"));
-        listaCytatow.add(new Cytat("Myślę, więc jestem.", "Kartezjusz"));
-        listaCytatow.add(new Cytat("Człowiek, który boi się cierpieć, już cierpi przez sam strach.", "Michel de Montaigne"));
-        listaCytatow.add(new Cytat("Podróż tysiąca mil zaczyna się od jednego kroku.", "Laozi"));
-        listaCytatow.add(new Cytat("„To, czego szukasz, także szuka ciebie.", "Rumi"));
+        if (nazwa.isEmpty() || kwotaTekst.isEmpty()) {
+            Toast.makeText(this, "Uzupełnij pola!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        double kwota;
+        try {
+            kwota = Double.parseDouble(kwotaTekst);
+        } catch (NumberFormatException e) {
+            Toast.makeText(this, "Zła kwota!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Wydatek wydatek = new Wydatek(nazwa, kwota, kategoria);
+
+        adapter.dodajWydatek(wydatek);
+        listaRecyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+
+        wyczyscFormularz();
+        odswiezPodsumowanie();
+    }
+
+    @Override
+    public void onDeleteClicked(int position) {
+        adapter.usunWydatek(position);
+        odswiezPodsumowanie();
+    }
+
+    @Override
+    public void onItemClicked(Wydatek wydatek) {
+        Toast.makeText(this,
+                "Kliknięto: " + wydatek.getNazwa(),
+                Toast.LENGTH_SHORT).show();
+    }
+
+    private void odswiezPodsumowanie() {
+        int liczba = listaWydatkow.size();
+        double suma = 0;
+
+        for (Wydatek w : listaWydatkow) {
+            suma += w.getKwota();
+        }
+
+        tekstPodsumowanie.setText(
+                "Wydatki: " + liczba + " | Suma: " +
+                        String.format("%.2f zł", suma)
+        );
+
+        if (liczba == 0) {
+            tekstPustaLista.setVisibility(View.VISIBLE);
+        } else {
+            tekstPustaLista.setVisibility(View.GONE);
+        }
+    }
+
+    private void wyczyscFormularz() {
+        poleNazwaWydatku.setText("");
+        poleKwotaWydatku.setText("");
+        spinnerKategoria.setSelection(0);
     }
 }
