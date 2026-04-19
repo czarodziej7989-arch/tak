@@ -1,4 +1,25 @@
 package com.example.myapplication;
+public class Wydatek {
+    private String nazwa;
+    private double kwota;
+    private String kategoria;
+    public Wydatek(String nazwa, double kwota, String kategoria) {
+        this.nazwa = nazwa;
+        this.kwota = kwota;
+        this.kategoria = kategoria;
+    }
+    public String getNazwa(){
+        return nazwa;
+    }
+    public double getKwota(){
+        return kwota;
+    }
+    public String getKategoria(){
+        return kategoria;
+    }
+}
+//////////////////////////////////////////
+package com.example.myapplication;
 
 import android.view.LayoutInflater;
 import android.view.View;
