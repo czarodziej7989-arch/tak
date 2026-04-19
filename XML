@@ -1,42 +1,141 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/main"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical">
+    android:padding="16dp">
 
     <TextView
-        android:id="@+id/cytat"
+        android:id="@+id/tekstNaglowek"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="30dp"
-        android:text=""/>
+        android:text="Dodaj nowy wydatek"
+        android:textSize="20sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <TextView
-        android:id="@+id/autor"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/poleNazwaWydatku"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:textSize="20dp"
-        android:text=""/>
+        android:hint="Nazwa wydatku"
+        app:layout_constraintTop_toBottomOf="@id/tekstNaglowek"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+
+    <EditText
+        android:id="@+id/poleKwotaWydatku"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Kwota, np. 15.50"
+        android:inputType="numberDecimal"
+        app:layout_constraintTop_toBottomOf="@id/poleNazwaWydatku"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"/>
+
+    <Spinner
+        android:id="@+id/spinnerKategoria"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:entries="@array/kategorie_wydatkow"
+        app:layout_constraintTop_toBottomOf="@id/poleKwotaWydatku"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="12dp"/>
 
     <Button
-        android:layout_marginTop="15dp"
-        android:id="@+id/guzik"
-        android:layout_width="wrap_content"
+        android:id="@+id/przyciskZapisz"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Wylosuj cytat"/>
-</LinearLayout>
-__
-class Cyctat
-package com.example.generatorcytatow;
+        android:text="@string/zapisz_wydatek"
+        app:layout_constraintTop_toBottomOf="@id/spinnerKategoria"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"/>
+    <TextView
+        android:id="@+id/tekstPodsumowanie"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Wydatki: 0 | Suma: 0,00 zł"
+        android:textStyle="bold"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/przyciskZapisz"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-public class Cytat {
-    String tresc;
-    String autor;
+    <TextView
+        android:id="@+id/tekstPustaLista"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="Brak zapisanych wydatków"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tekstPodsumowanie"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
-    public Cytat(String tresc, String autor) {
-        this.tresc = tresc;
-        this.autor = autor;
-    }
-}
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/listaWydatkow"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tekstPustaLista"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+////////////////////////////////////////////////////////////
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="6dp"
+    app:cardElevation="3dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+        <TextView
+            android:id="@+id/tekstNazwa"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tekstKwota"/>
+
+        <TextView
+            android:id="@+id/tekstKategoria"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@id/tekstNazwa"
+            app:layout_constraintStart_toStartOf="@id/tekstNazwa"
+            app:layout_constraintEnd_toEndOf="@id/tekstNazwa"/>
+
+        <TextView
+            android:id="@+id/tekstKwota"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            app:layout_constraintTop_toTopOf="@id/tekstNazwa"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+        <Button
+            android:id="@+id/przyciskUsun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Usuń"
+            app:layout_constraintTop_toBottomOf="@id/tekstKwota"
+            app:layout_constraintEnd_toEndOf="parent"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
