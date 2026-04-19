@@ -1,0 +1,88 @@
+package com.example.myapplication;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.myapplication.Wydatek;
+
+import java.util.ArrayList;
+import java.util.Locale;
+
+public class WydatekAdapter extends RecyclerView.Adapter<WydatekAdapter.WydatekViewHolder> {
+
+    public interface OnWydatekActionListener {
+        void onDeleteClicked(int position);
+        void onItemClicked(Wydatek wydatek);
+    }
+
+    private ArrayList<Wydatek> listaWydatkow;
+    private OnWydatekActionListener listener;
+
+    public WydatekAdapter(ArrayList<Wydatek> listaWydatkow, OnWydatekActionListener listener) {
+        this.listaWydatkow = listaWydatkow;
+        this.listener = listener;
+    }
+
+    @NonNull
+    @Override
+    public WydatekViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_wydatek, parent, false);
+        return new WydatekViewHolder(view);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull WydatekViewHolder holder, int position) {
+        Wydatek wydatek = listaWydatkow.get(position);
+
+        holder.tekstNazwa.setText(wydatek.getNazwa());
+        holder.tekstKategoria.setText(wydatek.getKategoria());
+        holder.tekstKwota.setText(String.format(Locale.getDefault(), "%.2f zł", wydatek.getKwota()));
+
+        holder.itemView.setOnClickListener(v -> listener.onItemClicked(wydatek));
+
+        holder.przyciskUsun.setOnClickListener(v -> {
+            int pos = holder.getAdapterPosition();
+            if (pos != RecyclerView.NO_POSITION) {
+                listener.onDeleteClicked(pos);
+            }
+        });
+    }
+
+    @Override
+    public int getItemCount() {
+        return listaWydatkow.size();
+    }
+
+    public void dodajWydatek(Wydatek wydatek) {
+        listaWydatkow.add(wydatek);
+        notifyItemInserted(listaWydatkow.size() - 1);
+    }
+
+    public void usunWydatek(int position) {
+        if (position >= 0 && position < listaWydatkow.size()) {
+            listaWydatkow.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+    public static class WydatekViewHolder extends RecyclerView.ViewHolder {
+        TextView tekstNazwa;
+        TextView tekstKategoria;
+        TextView tekstKwota;
+        Button przyciskUsun;
+        public WydatekViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            tekstNazwa = itemView.findViewById(R.id.tekstNazwa);
+            tekstKategoria = itemView.findViewById(R.id.tekstKategoria);
+            tekstKwota = itemView.findViewById(R.id.tekstKwota);
+            przyciskUsun = itemView.findViewById(R.id.przyciskUsun);
+        }
+    }
+}
