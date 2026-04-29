@@ -1,119 +1,62 @@
-package com.example.myapplication;
-
+package com.example.fiszka;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.myapplication.Wydatek;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity
-        implements View.OnClickListener, WydatekAdapter.OnWydatekActionListener {
+public class MainActivity extends AppCompatActivity {
 
-    private final ArrayList<Wydatek> listaWydatkow = new ArrayList<>();
+    EditText etPytanie, etOdpowiedz;
+    Button btnDodaj;
+    ListView listView;
 
-    private EditText poleNazwaWydatku;
-    private EditText poleKwotaWydatku;
-    private Spinner spinnerKategoria;
-    private Button przyciskZapisz;
-
-    private WydatekAdapter adapter;
-    private TextView tekstPodsumowanie;
-    private TextView tekstPustaLista;
-    private RecyclerView listaRecyclerView;
+    ArrayList<Fiszka> listaFiszek;
+    ArrayAdapter<Fiszka> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        poleNazwaWydatku = findViewById(R.id.poleNazwaWydatku);
-        poleKwotaWydatku = findViewById(R.id.poleKwotaWydatku);
-        spinnerKategoria = findViewById(R.id.spinnerKategoria);
-        przyciskZapisz = findViewById(R.id.przyciskZapisz);
+        etPytanie = findViewById(R.id.etPytanie);
+        etOdpowiedz = findViewById(R.id.etOdpowiedz);
+        btnDodaj = findViewById(R.id.btnDodaj);
+        listView = findViewById(R.id.listView);
 
-        tekstPodsumowanie = findViewById(R.id.tekstPodsumowanie);
-        tekstPustaLista = findViewById(R.id.tekstPustaLista);
-        listaRecyclerView = findViewById(R.id.listaWydatkow);
+        listaFiszek = new ArrayList<>();
 
-        adapter = new WydatekAdapter(listaWydatkow, this);
-        listaRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        listaRecyclerView.setAdapter(adapter);
+        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaFiszek);
 
-        przyciskZapisz.setOnClickListener(this);
+        listView.setAdapter(adapter);
 
-        odswiezPodsumowanie();
-    }
+        btnDodaj.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-    @Override
-    public void onClick(View view) {
-        String nazwa = poleNazwaWydatku.getText().toString().trim();
-        String kwotaTekst = poleKwotaWydatku.getText().toString().trim();
-        String kategoria = spinnerKategoria.getSelectedItem().toString();
+                String pytanie = etPytanie.getText().toString();
+                String odpowiedz = etOdpowiedz.getText().toString();
 
-        if (nazwa.isEmpty() || kwotaTekst.isEmpty()) {
-            Toast.makeText(this, "Uzupełnij pola!", Toast.LENGTH_SHORT).show();
-            return;
-        }
+                if (pytanie.isEmpty() || odpowiedz.isEmpty()) {
+                    Toast.makeText(MainActivity.this, "Uzupełnij wszystkie pola!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-        double kwota;
-        try {
-            kwota = Double.parseDouble(kwotaTekst);
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Zła kwota!", Toast.LENGTH_SHORT).show();
-            return;
-        }
+                Fiszka nowaFiszka = new Fiszka(pytanie, odpowiedz);
 
-        Wydatek wydatek = new Wydatek(nazwa, kwota, kategoria);
+                listaFiszek.add(nowaFiszka);
 
-        adapter.dodajWydatek(wydatek);
-        listaRecyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+                adapter.notifyDataSetChanged();
 
-        wyczyscFormularz();
-        odswiezPodsumowanie();
-    }
-
-    @Override
-    public void onDeleteClicked(int position) {
-        adapter.usunWydatek(position);
-        odswiezPodsumowanie();
-    }
-
-    @Override
-    public void onItemClicked(Wydatek wydatek) {
-        Toast.makeText(this,
-                "Kliknięto: " + wydatek.getNazwa(),
-                Toast.LENGTH_SHORT).show();
-    }
-
-    private void odswiezPodsumowanie() {
-        int liczba = listaWydatkow.size();
-        double suma = 0;
-
-        for (Wydatek w : listaWydatkow) {
-            suma += w.getKwota();
-        }
-
-        tekstPodsumowanie.setText(
-                "Wydatki: " + liczba + " | Suma: " +
-                        String.format("%.2f zł", suma)
-        );
-
-        if (liczba == 0) {
-            tekstPustaLista.setVisibility(View.VISIBLE);
-        } else {
-            tekstPustaLista.setVisibility(View.GONE);
-        }
-    }
-
-    private void wyczyscFormularz() {
-        poleNazwaWydatku.setText("");
-        poleKwotaWydatku.setText("");
-        spinnerKategoria.setSelection(0);
+                etPytanie.setText("");
+                etOdpowiedz.setText("");
+            }
+        });
     }
 }
