@@ -60,3 +60,28 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 }
+////////////////////
+package com.example.fiszka;
+public class Fiszka {
+
+    private String pytanie;
+    private String odpowiedz;
+
+    public Fiszka(String pytanie, String odpowiedz) {
+        this.pytanie = pytanie;
+        this.odpowiedz = odpowiedz;
+    }
+
+    public String getPytanie() {
+        return pytanie;
+    }
+
+    public String getOdpowiedz() {
+        return odpowiedz;
+    }
+
+    @Override
+    public String toString() {
+        return "P: " + pytanie + " | O: " + odpowiedz;
+    }
+}
