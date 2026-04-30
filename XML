@@ -1,33 +1,80 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
-    android:id="@+id/main"
     android:padding="16dp"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/etPytanie"
-        android:hint="Wpisz pytanie"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"/>
 
-    <EditText
-        android:id="@+id/etOdpowiedz"
-        android:hint="Wpisz odpowiedź"
+    <LinearLayout
+        android:id="@+id/sekcjaKreatora"
+        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
 
-    <Button
-        android:id="@+id/btnDodaj"
-        android:text="Dodaj fiszkę"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <EditText
+            android:id="@+id/etPytanie"
+            android:hint="Wpisz pytanie"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
-    <ListView
-        android:id="@+id/listView"
+        <EditText
+            android:id="@+id/etOdpowiedz"
+            android:hint="Wpisz odpowiedź"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnDodaj"
+            android:text="Dodaj fiszkę"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnStartQuiz"
+            android:text="Rozpocznij Quiz"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"/>
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/sekcjaQuizu"
+        android:orientation="vertical"
+        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvPytanieQuiz"
+            android:text="Pytanie"
+            android:textSize="18sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <EditText
+            android:id="@+id/etOdpowiedzQuiz"
+            android:hint="Twoja odpowiedź"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnSprawdz"
+            android:text="Sprawdź"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <Button
+            android:id="@+id/btnKoniecQuiz"
+            android:text="Zakończ Quiz"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
 </LinearLayout>
