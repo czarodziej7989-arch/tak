@@ -1,133 +1,34 @@
-package com.example.fiszka;
+package com.example.myapplication;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.view.View;
-import android.widget.*;
-import androidx.appcompat.app.AppCompatActivity;
 
-import java.util.ArrayList;
-import java.util.Random;
+import androidx.activity.EdgeToEdge;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
+
+import org.w3c.dom.Text;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText etPytanie, etOdpowiedz, etOdpowiedzQuiz;
-    Button btnDodaj, btnStartQuiz, btnSprawdz, btnKoniecQuiz;
-    TextView tvPytanieQuiz;
-    ListView listView;
-
-    LinearLayout sekcjaKreatora, sekcjaQuizu;
-
-    ArrayList<Fiszka> listaFiszek;
-    ArrayAdapter<Fiszka> adapter;
-
-    Random random = new Random();
-    Fiszka aktualnaFiszka;
-
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        etPytanie = findViewById(R.id.etPytanie);
-        etOdpowiedz = findViewById(R.id.etOdpowiedz);
-        etOdpowiedzQuiz = findViewById(R.id.etOdpowiedzQuiz);
-        btnDodaj = findViewById(R.id.btnDodaj);
-        btnStartQuiz = findViewById(R.id.btnStartQuiz);
-        btnSprawdz = findViewById(R.id.btnSprawdz);
-        btnKoniecQuiz = findViewById(R.id.btnKoniecQuiz);
-        tvPytanieQuiz = findViewById(R.id.tvPytanieQuiz);
-        listView = findViewById(R.id.listView);
-        sekcjaKreatora = findViewById(R.id.sekcjaKreatora);
-        sekcjaQuizu = findViewById(R.id.sekcjaQuizu);
-        listaFiszek = new ArrayList<>();
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, listaFiszek);
-        listView.setAdapter(adapter);
-
-        btnDodaj.setOnClickListener(v -> {
-            String pytanie = etPytanie.getText().toString();
-            String odpowiedz = etOdpowiedz.getText().toString();
-
-            if (pytanie.isEmpty() || odpowiedz.isEmpty()) {
-                Toast.makeText(this, "Uzupełnij pola!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            listaFiszek.add(new Fiszka(pytanie, odpowiedz));
-            adapter.notifyDataSetChanged();
-
-            etPytanie.setText("");
-            etOdpowiedz.setText("");
-
-            sprawdzCzyMoznaQuiz();
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
         });
-
-        btnStartQuiz.setOnClickListener(v -> {
-            if (listaFiszek.isEmpty()) {
-                Toast.makeText(this, "Brak fiszek!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            sekcjaKreatora.setVisibility(View.GONE);
-            sekcjaQuizu.setVisibility(View.VISIBLE);
-
-            losujFiszke();
-        });
-
-        btnSprawdz.setOnClickListener(v -> {
-            String odp = etOdpowiedzQuiz.getText().toString();
-
-            if(odp.equalsIgnoreCase(aktualnaFiszka.getOdpowiedz())) {
-                Toast.makeText(this, "Dobrze!", Toast.LENGTH_SHORT).show();
-            } else{
-                Toast.makeText(this, "Źle! Poprawna: " + aktualnaFiszka.getOdpowiedz(), Toast.LENGTH_SHORT).show();
-            }
-
-            etOdpowiedzQuiz.setText("");
-            losujFiszke();
-        });
-
-        btnKoniecQuiz.setOnClickListener(v -> {
-            sekcjaQuizu.setVisibility(View.GONE);
-            sekcjaKreatora.setVisibility(View.VISIBLE);
-        });
-
-        sprawdzCzyMoznaQuiz();
-    }
-
-    private void losujFiszke() {
-        int index = random.nextInt(listaFiszek.size());
-        aktualnaFiszka = listaFiszek.get(index);
-        tvPytanieQuiz.setText(aktualnaFiszka.getPytanie());
-    }
-
-    private void sprawdzCzyMoznaQuiz() {
-        btnStartQuiz.setEnabled(!listaFiszek.isEmpty());
-    }
-}
-////////////////////////////////
-package com.example.fiszka;
-
-public class Fiszka {
-
-    private String pytanie;
-    private String odpowiedz;
-
-    public Fiszka(String pytanie, String odpowiedz) {
-        this.pytanie = pytanie;
-        this.odpowiedz = odpowiedz;
-    }
-
-    public String getPytanie() {
-        return pytanie;
-    }
-
-    public String getOdpowiedz() {
-        return odpowiedz;
-    }
-
-    @Override
-    public String toString() {
-        return "P: " + pytanie + " | O: " + odpowiedz;
+        EditText imie = findViewById(R.id.imie);
+        EditText nazwisko = findViewById(R.id.nazwisko);
+        EditText email = findViewById(R.id.email);
+        EditText haslo = findViewById(R.id.haslo);
+        TextView wynik = findViewById(R.id.wynik);
     }
 }
