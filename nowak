@@ -1,0 +1,48 @@
+const { passwordValidator, MinLength, upperCase, lowerCase, oneNumber, Specialchar, nowhitespace} = require("./passwordValidator"); 
+describe("Walidacja hasła", () => { 
+test("Posiada minimum 8 znaków.", () => {
+expect(MinLength("")).toBe(false);
+expect(MinLength("1234567")).toBe(false);
+expect(MinLength("12345678")).toBe(true);
+expect(MinLength("a123456789")).toBe(true);
+});
+test("Zawiera przynajmniej jedną wielką literę.", () => {
+expect(upperCase("haslobezduzejlitery")).toBe(false);
+expect(upperCase("hasloZduzalitera")).toBe(true);
+expect(upperCase("Haslo12345")).toBe(true);
+expect(upperCase("HASLO12345")).toBe(true);
+});
+test("Zawiera przynajmniej jedną małą literę. ", () => {
+expect(lowerCase("HASLO123")).toBe(false);
+expect(lowerCase("Haslo123")).toBe(true);
+});
+test("Zawiera przynajmniej jedną cyfrę. ", () => {
+expect(oneNumber("Haslo!")).toBe(false);
+expect(oneNumber("Haslo123!")).toBe(true);
+});
+test("Zawiera przynajmniej jeden znak specjalny.", () => {
+expect(Specialchar("Haslo123")).toBe(false);
+expect(Specialchar("Haslo123!")).toBe(true);
+});
+test("Nie zawiera białych znaków.", () => {
+expect(nowhitespace("Haslo 123")).toBe(false);
+expect(nowhitespace("Haslo123!")).toBe(true);
+});
+});
+describe("validatePassword()", () => {
+test("zwraca gdy nie jest typu string", () => {
+expect(passwordValidator(null)).toBe(false)
+expect(passwordValidator(123456789)).toBe(false)
+});
+test("zwraca gdy haslo spelnia wszystkie warunki", () =>{
+expect(passwordValidator("Haslo123!")).toBe(false)
+});
+test("zwraca gdy haslo nie spelnia ani jednego warunku", () =>{
+expect(passwordValidator("Haslo1!")).toBe(false)
+expect(passwordValidator("Haslo123!")).toBe(false)
+expect(passwordValidator("HASLO123!")).toBe(false)
+expect(passwordValidator("Haslo!@!")).toBe(false)
+expect(passwordValidator("Haslo123")).toBe(false)
+expect(passwordValidator("Haslo 123!")).toBe(false)
+});
+});
